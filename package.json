@@ -1,0 +1,37 @@
+{
+  "name": "wp-flush-cache",
+  "version": "2.0.0",
+  "description": "Helps to flush different types of cache.",
+  "scripts": {
+    "build": "uglifyjs ./public/js/main.js -c -o ./public/js/main.min.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/innocode-digital/wp-flush-cache.git"
+  },
+  "author": {
+    "name": "Innocode",
+    "email": "post@innocode.no",
+    "homepage": "https://innocode.com/"
+  },
+  "contributors": [
+    {
+      "name": "Oleksandr Strikha",
+      "email": "alex@strikha.com"
+    },
+    {
+      "name": "Viktor Kuliebiakin",
+      "email": "kuliebiakin@gmail.com"
+    }
+  ],
+  "license": "GPL-2.0-or-later",
+  "bugs": {
+    "url": "https://github.com/innocode-digital/wp-flush-cache/issues"
+  },
+  "homepage": "https://github.com/innocode-digital/wp-flush-cache#readme",
+  "devDependencies": {},
+  "dependencies": {
+    "uglify-js": "^3.12.2"
+  }
+}
