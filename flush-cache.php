@@ -3,7 +3,7 @@
  * Plugin Name: Flush Cache Buttons
  * Description: Helps to flush different types of cache.
  * Plugin URI: https://github.com/innocode-digital/wp-google-datastudio
- * Version: 2.0.0
+ * Version: 2.1.0
  * Author: Oleksandr Strikha, Innocode
  * Author URI: https://innocode.com
  * Tested up to: 5.6
@@ -13,7 +13,7 @@
 
 use Innocode\FlushCache;
 
-define( 'INNOCODE_FLUSH_CACHE_VERSION', '2.0.0' );
+define( 'INNOCODE_FLUSH_CACHE_VERSION', '2.1.0' );
 define( 'INNOCODE_FLUSH_CACHE_FILE', __FILE__ );
 
 if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
@@ -24,42 +24,27 @@ if ( ! function_exists( 'flush_cache_add_button' ) ) {
     /**
      * @param string   $title
      * @param callable $callback
+     * @param string   $description
      */
-    function flush_cache_add_button( string $title, callable $callback ) {
-        $key = 'innocode_flush_cache_' . sanitize_key( $title );
-
-        add_action( "wp_ajax_$key", function () use ( $title, $key, $callback ) {
-            check_ajax_referer( $key );
-
-            $success = $callback();
-
-            wp_send_json( [
-                'success' => $success,
-                'data'    => sprintf(
-                    $success
-                        ? __( '%s flushed.', 'innocode-flush-cache' )
-                        : __( '%s could not be flushed.', 'innocode-flush-cache' ),
-                    $title
-                )
-            ] );
-        } );
-
-        add_filter( 'innocode_flush_cache_buttons', function ( $buttons ) use ( $key, $title ) {
-            $buttons[ $key ] = $title;
-
-            return $buttons;
-        } );
+    function flush_cache_add_button( string $title, callable $callback, string $description = '' ) {
+        FlushCache\Helpers::add_action( 'buttons', $title, $callback, $description );
     }
 }
 
-if ( ! function_exists( 'flush_cache_delete_all_transients' ) ) {
-    function flush_cache_delete_all_transients() : bool {
-        global $wpdb;
+if ( ! function_exists( 'flush_cache_add_network_button' ) ) {
+    /**
+     * @param string   $title
+     * @param callable $callback
+     * @param string   $description
+     */
+    function flush_cache_add_network_button( string $title, callable $callback, string $description = '' ) {
+        FlushCache\Helpers::add_action( 'network_buttons', $title, $callback, $description );
+    }
+}
 
-        $wpdb->query( "DELETE FROM `$wpdb->options` WHERE `option_name` LIKE ('_transient_%');" );
-        $wpdb->query( "DELETE FROM `$wpdb->options` WHERE `option_name` LIKE ('_site_transient_%');" );
-
-        return true;
+if ( ! function_exists( 'flush_cache_add_sites_action_link' ) ) {
+    function flush_cache_add_sites_action_link( string $title, callable $callback, string $description = '' ) {
+        FlushCache\Helpers::add_action( 'sites_action_links', $title, $callback, $description );
     }
 }
 
@@ -67,13 +52,27 @@ $innocode_flush_cache = new FlushCache\Plugin( __DIR__ );
 $innocode_flush_cache->run();
 
 if ( wp_using_ext_object_cache() ) {
-    flush_cache_add_button(
-        __( 'Object cache', 'innocode-flush-cache' ),
-        'wp_cache_flush'
-    );
+    if ( is_multisite() ) {
+        flush_cache_add_network_button(
+            __( 'Object cache', 'innocode-flush-cache' ),
+            'wp_cache_flush'
+        );
+    } else {
+        flush_cache_add_button(
+            __( 'Object cache', 'innocode-flush-cache' ),
+            'wp_cache_flush'
+        );
+    }
 } else {
-    flush_cache_add_button(
-        __( 'Transient cache', 'innocode-flush-cache' ),
-        'flush_cache_delete_all_transients'
-    );
+    if ( is_multisite() ) {
+        flush_cache_add_sites_action_link(
+            __( 'Transient cache', 'innocode-flush-cache' ),
+            [ 'Innocode\FlushCache\Helpers', 'delete_all_transients' ]
+        );
+    } else {
+        flush_cache_add_button(
+            __( 'Transient cache', 'innocode-flush-cache' ),
+            [ 'Innocode\FlushCache\Helpers', 'delete_all_transients' ]
+        );
+    }
 }
