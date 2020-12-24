@@ -3,7 +3,7 @@
  * Plugin Name: Flush Cache Buttons
  * Description: Helps to flush different types of cache.
  * Plugin URI: https://github.com/innocode-digital/wp-google-datastudio
- * Version: 2.2.0
+ * Version: 2.2.1
  * Author: Oleksandr Strikha, Innocode
  * Author URI: https://innocode.com
  * Tested up to: 5.6
@@ -13,7 +13,7 @@
 
 use Innocode\FlushCache;
 
-define( 'INNOCODE_FLUSH_CACHE_VERSION', '2.2.0' );
+define( 'INNOCODE_FLUSH_CACHE_VERSION', '2.2.1' );
 define( 'INNOCODE_FLUSH_CACHE_FILE', __FILE__ );
 
 if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
@@ -64,13 +64,13 @@ if ( wp_using_ext_object_cache() ) {
         );
     }
 } else {
+    flush_cache_add_button(
+        __( 'Transient cache', 'innocode-flush-cache' ),
+        [ 'Innocode\FlushCache\Helpers', 'delete_all_transients' ]
+    );
+
     if ( is_multisite() ) {
         flush_cache_add_sites_action_link(
-            __( 'Transient cache', 'innocode-flush-cache' ),
-            [ 'Innocode\FlushCache\Helpers', 'delete_all_transients' ]
-        );
-    } else {
-        flush_cache_add_button(
             __( 'Transient cache', 'innocode-flush-cache' ),
             [ 'Innocode\FlushCache\Helpers', 'delete_all_transients' ]
         );
