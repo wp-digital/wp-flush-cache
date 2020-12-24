@@ -26,7 +26,7 @@ if ( ! function_exists( 'flush_cache_add_button' ) ) {
      * @param callable $callback
      * @param string   $description
      */
-    function flush_cache_add_button( string $title, callable $callback, string $description = '' ) {
+    function flush_cache_add_button( $title, callable $callback, $description = '' ) {
         FlushCache\Helpers::add_action( 'buttons', $title, $callback, $description );
     }
 }
@@ -37,13 +37,13 @@ if ( ! function_exists( 'flush_cache_add_network_button' ) ) {
      * @param callable $callback
      * @param string   $description
      */
-    function flush_cache_add_network_button( string $title, callable $callback, string $description = '' ) {
+    function flush_cache_add_network_button( $title, callable $callback, $description = '' ) {
         FlushCache\Helpers::add_action( 'network_buttons', $title, $callback, $description );
     }
 }
 
 if ( ! function_exists( 'flush_cache_add_sites_action_link' ) ) {
-    function flush_cache_add_sites_action_link( string $title, callable $callback, string $description = '' ) {
+    function flush_cache_add_sites_action_link( $title, callable $callback, $description = '' ) {
         FlushCache\Helpers::add_action( 'sites_action_links', $title, $callback, $description );
     }
 }

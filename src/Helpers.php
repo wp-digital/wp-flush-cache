@@ -21,7 +21,7 @@ final class Helpers
      * @param callable $callback
      * @param string   $description
      */
-    public static function add_action( string $type, string $title, callable $callback, string $description = '' )
+    public static function add_action( $type, $title, callable $callback, $description = '' )
     {
         $hook = "innocode_flush_cache_$type";
         $callable_name = Helpers::callable_to_string( $callback );
@@ -57,7 +57,7 @@ final class Helpers
             ] );
         } );
 
-        add_filter( $hook, function ( array $buttons ) use ( $action, $title, $description ) : array {
+        add_filter( $hook, function ( array $buttons ) use ( $action, $title, $description ) {
             $buttons[ $action ] = [
                 'title'       => $title,
                 'description' => $description,
@@ -70,7 +70,7 @@ final class Helpers
     /**
      * @return array
      */
-    public static function get_buttons() : array
+    public static function get_buttons()
     {
         return apply_filters( 'innocode_flush_cache_buttons', [] );
     }
@@ -78,7 +78,7 @@ final class Helpers
     /**
      * @return array
      */
-    public static function get_network_buttons() : array
+    public static function get_network_buttons()
     {
         return apply_filters( 'innocode_flush_cache_network_buttons', [] );
     }
@@ -86,7 +86,7 @@ final class Helpers
     /**
      * @return array
      */
-    public static function get_sites_action_links() : array
+    public static function get_sites_action_links()
     {
         return apply_filters( 'innocode_flush_cache_sites_action_links', [] );
     }
@@ -94,7 +94,7 @@ final class Helpers
     /**
      * @return bool
      */
-    public static function delete_all_transients() : bool
+    public static function delete_all_transients()
     {
         global $wpdb;
 
@@ -108,7 +108,7 @@ final class Helpers
      * @param callable $callable
      * @return string
      */
-    public static function callable_to_string( callable $callable ) : string
+    public static function callable_to_string( callable $callable )
     {
         if ( is_string( $callable ) ) {
             return trim( $callable );

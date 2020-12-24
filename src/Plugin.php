@@ -21,7 +21,7 @@ final class Plugin
      * Plugin constructor.
      * @param string $path
      */
-    public function __construct( string $path )
+    public function __construct( $path )
     {
         $this->path = $path;
     }
@@ -39,7 +39,7 @@ final class Plugin
     /**
      * @return string
      */
-    public function get_path() : string
+    public function get_path()
     {
         return $this->path;
     }
@@ -47,7 +47,7 @@ final class Plugin
     /**
      * @return string
      */
-    public function get_views_dir() : string
+    public function get_views_dir()
     {
         return "{$this->get_path()}/resources/views";
     }
@@ -56,7 +56,7 @@ final class Plugin
      * @param string $name
      * @return string
      */
-    public function get_view_file( string $name ) : string
+    public function get_view_file( $name )
     {
         return "{$this->get_views_dir()}/$name";
     }
@@ -64,7 +64,7 @@ final class Plugin
     /**
      * @param string $name
      */
-    public function view( string $name )
+    public function view( $name )
     {
         $file = $this->get_view_file( "$name.php" );
 
@@ -176,7 +176,7 @@ final class Plugin
      * @param int   $blog_id
      * @return array
      */
-    public function add_sites_action_links( array $actions, int $blog_id ) : array
+    public function add_sites_action_links( array $actions, $blog_id )
     {
         foreach ( Helpers::get_sites_action_links() as $key => $link ) {
             $actions[ $key ] = sprintf(
