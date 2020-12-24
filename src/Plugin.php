@@ -185,7 +185,7 @@ final class Plugin
                     'action'  => $key,
                     'blog_id' => $blog_id,
                 ], admin_url( 'admin-ajax.php' ) ), $key ),
-                !empty( $link['description'] ) ? esc_html( $link['description'] ) : '',
+                ! empty( $link['description'] ) ? esc_html( $link['description'] ) : '',
                 esc_attr( Plugin::ADMIN_PAGE_CACHE_CONTROL ),
                 sprintf( __( 'Flush %s', 'innocode-flush-cache' ), esc_html( $link['title'] ) ),
                 __( 'Flushing...', 'innocode-flush-cache' )
