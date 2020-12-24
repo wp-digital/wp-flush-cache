@@ -149,14 +149,19 @@ final class Plugin
             return;
         }
 
+        // Domain mapping processes mu-plugins directory wrong.
+        $has_domain_mapping = remove_filter( 'plugins_url', 'domain_mapping_plugins_uri', 1 );
+
         $suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+        $script_url = plugins_url( "public/js/main$suffix.js", INNOCODE_FLUSH_CACHE_FILE );
+
+        if ( $has_domain_mapping ) {
+            add_filter( 'plugins_url', 'domain_mapping_plugins_uri', 1 );
+        }
 
         wp_enqueue_script(
             'innocode-flush-cache',
-            plugins_url(
-                "public/js/main$suffix.js",
-                INNOCODE_FLUSH_CACHE_FILE
-            ),
+            $script_url,
             [ 'jquery' ],
             INNOCODE_FLUSH_CACHE_VERSION,
             true

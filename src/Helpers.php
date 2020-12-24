@@ -39,7 +39,7 @@ final class Helpers
             $blog_id = isset( $_REQUEST['blog_id'] ) ? absint( $_REQUEST['blog_id'] ) : get_current_blog_id();
 
             switch_to_blog( $blog_id );
-            $success = $callback();
+            $success = $callback() !== false;
             restore_current_blog();
 
             wp_send_json( [
