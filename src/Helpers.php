@@ -11,6 +11,11 @@ use Closure;
 final class Helpers
 {
     /**
+     * @var int
+     */
+    private static $closures_count = 0;
+
+    /**
      * @param string   $type
      * @param string   $title
      * @param callable $callback
@@ -19,7 +24,14 @@ final class Helpers
     public static function add_action( string $type, string $title, callable $callback, string $description = '' )
     {
         $hook = "innocode_flush_cache_$type";
-        $action = "{$hook}_" . sanitize_key( Helpers::callable_to_string( $callback ) );
+        $callable_name = Helpers::callable_to_string( $callback );
+
+        if ( $callable_name == 'Closure' ) {
+            $callable_name .= Helpers::$closures_count;
+            Helpers::$closures_count++;
+        }
+
+        $action = "{$hook}_" . sanitize_key( $callable_name );
 
         add_action( "wp_ajax_$action", function () use ( $action, $title, $callback ) {
             check_ajax_referer( $action );
