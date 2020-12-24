@@ -36,11 +36,15 @@ final class Helpers
         add_action( "wp_ajax_$action", function () use ( $action, $title, $callback ) {
             check_ajax_referer( $action );
 
-            $blog_id = isset( $_REQUEST['blog_id'] ) ? absint( $_REQUEST['blog_id'] ) : get_current_blog_id();
+            if ( is_multisite() ) {
+                $blog_id = isset( $_REQUEST['blog_id'] ) ? absint( $_REQUEST['blog_id'] ) : get_current_blog_id();
 
-            switch_to_blog( $blog_id );
-            $success = $callback() !== false;
-            restore_current_blog();
+                switch_to_blog( $blog_id );
+                $success = $callback() !== false;
+                restore_current_blog();
+            } else {
+                $success = $callback() !== false;
+            }
 
             wp_send_json( [
                 'success' => $success,
