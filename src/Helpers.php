@@ -92,16 +92,38 @@ final class Helpers
     }
 
     /**
-     * @return bool
+     * @return int
      */
-    public static function delete_all_transients() : bool
+    public static function delete_all_transients() : int
     {
         global $wpdb;
 
-        $wpdb->query( "DELETE FROM `$wpdb->options` WHERE `option_name` LIKE ('_transient_%');" );
-        $wpdb->query( "DELETE FROM `$wpdb->options` WHERE `option_name` LIKE ('_site_transient_%');" );
+        $deleted = $wpdb->query(
+            $wpdb->prepare(
+                "DELETE FROM $wpdb->options WHERE option_name LIKE %s",
+                $wpdb->esc_like( '_transient_' ) . '%'
+            )
+        );
 
-        return true;
+        if ( ! is_multisite() ) {
+            // Single site stores site transients in the options table.
+            $deleted .= $wpdb->query(
+                $wpdb->prepare(
+                    "DELETE FROM $wpdb->options WHERE option_name LIKE %s",
+                    $wpdb->esc_like( '_site_transient_' ) . '%'
+                )
+            );
+        } elseif ( is_multisite() && is_main_site() && is_main_network() ) {
+            // Multisite stores site transients in the sitemeta table.
+            $deleted .= $wpdb->query(
+                $wpdb->prepare(
+                    "DELETE FROM $wpdb->sitemeta WHERE meta_key LIKE %s",
+                    $wpdb->esc_like( '_site_transient_' ) . '%'
+                )
+            );
+        }
+
+        return $deleted;
     }
 
     /**
