@@ -48,14 +48,18 @@ Adds flush button with a callback to site admin area: `/wp-admin/tools.php?page=
 flush_cache_add_button( string $title, callable $callback, string $description = '' );
 ```
 
+---
+
 Adds flush button with a callback to network admin area: `/wp-admin/network/admin.php?page=innocode_cache-control`.
 
 ```
 flush_cache_add_network_button( string $title, callable $callback, string $description = '' );
 ```
 
+---
+
 Adds action link with a callback to network admin area to the sites list: `/wp-admin/network/sites.php`.
 
 ```
-function flush_cache_add_sites_action_link( string $title, callable $callback, string $description = '' );
+flush_cache_add_sites_action_link( string $title, callable $callback, string $description = '' );
 ```
